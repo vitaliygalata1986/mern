@@ -1,0 +1,5 @@
+Docs.odt
+*.odt
+.~lock.*.odt#
+node_modules
+.env 
