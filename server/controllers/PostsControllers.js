@@ -2,7 +2,7 @@ import Posts from '../models/PostsModel.js';
 // Mongoose нужен для проверки формата ObjectId перед запросами по id.
 import mongoose from 'mongoose';
 
-// POST /api: создаём сообщение и возвращаем сохранённый документ.
+// POST /api/posts: создаём сообщение и возвращаем сохранённый документ.
 const createPosts = async (req, res) => {
   // Берём поля из JSON-тела, разобранного express.json() в index.js.
   const { text, author } = req.body;
@@ -20,7 +20,7 @@ const createPosts = async (req, res) => {
   }
 };
 
-// GET /api: возвращаем массив сообщений, начиная с самых новых.
+// GET /api/posts: возвращаем массив сообщений, начиная с самых новых.
 const getPosts = async (req, res) => {
   // find() без фильтра выбирает все документы; пустой результат — массив [].
   try {
@@ -31,7 +31,7 @@ const getPosts = async (req, res) => {
   }
 };
 
-// GET /api/:id: получаем один документ по его _id.
+// GET /api/posts/:id: получаем один документ по его _id.
 const getPostById = async (req, res) => {
   const { id } = req.params; // Извлекаем параметр id из URL
 
@@ -56,7 +56,7 @@ const getPostById = async (req, res) => {
   res.send({ messages: 'DELETE one message' });
 };
 
-// DELETE /api/:id: удаляем документ и включаем его в ответ.
+// DELETE /api/posts/:id: удаляем документ и включаем его в ответ.
 const deletePostById = async (req, res) => {
   const { id } = req.params; // Извлекаем параметр id из URL
 
@@ -83,7 +83,7 @@ const deletePostById = async (req, res) => {
   res.send({ messages: 'UPDATE one message' });
 };
 
-// PATCH /api/:id: обновляем документ и возвращаем его новое состояние.
+// PATCH /api/posts/:id: обновляем документ и возвращаем его новое состояние.
 const updatePostById = async (req, res) => {
   const { id } = req.params; // Извлекаем параметр id из URL
 
