@@ -58,3 +58,52 @@ header span {
   border: 0;
   border-bottom: 1px solid #34515c;
 }
+
+.add-post {
+  width: 30%;
+  float: right;
+}
+
+.add-post textarea,
+.add-post input {
+  width: 100%;
+  margin: 10px 0;
+  font-family: 'Iosevka Charon Mono', monospace;
+  font-weight: 300;
+  font-style: normal;
+  border: 0;
+  outline: none;
+  box-sizing: border-box;
+  padding: 10px;
+  resize: none;
+  background: #d8d8d8;
+  border-radius: 5px;
+}
+
+.add-post button {
+  border: 0;
+  background: #35c750;
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: #0c550a;
+  font-weight: bold;
+  font-family: 'Iosevka Charon Mono', monospace;
+  cursor: pointer;
+  transition: all 500ms ease;
+}
+
+.add-post button:hover {
+  transform: scale(1.1);
+}
+
+.add-post button:hover {
+  transform: scale(1.1);
+}
+
+.add-post .error {
+  background-color: #fc7654;
+  color: #802b16;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}

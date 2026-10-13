@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import PostDetail from './PostDetail';
+import PostForm from './PostForm';
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -23,9 +24,12 @@ function Home() {
 
     fetchPosts();
   }, []);
+
   return (
     <div className="main-section">
+      <PostForm />
       <h2>Welcome to the Home Page</h2>
+
       <div className="posts">
         {posts.length > 0 ? (
           posts.map((post) => <PostDetail key={post._id} post={post} />)
