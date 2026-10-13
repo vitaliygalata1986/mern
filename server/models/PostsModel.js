@@ -27,6 +27,8 @@ export default mongoose.model('Posts', postaSchema, 'posts');
 
 Этот файл описывает структуру сообщений и экспортирует модель для работы
 с коллекцией posts. Подключение к MongoDB выполняется отдельно, в index.js.
+PostContext на фронтенде хранит полученные по HTTP объекты в памяти React;
+он не заменяет эту модель и не обращается к MongoDB напрямую.
 
 1. const { Schema } = mongoose
    Достаём конструктор Schema из объекта mongoose с помощью деструктуризации.
