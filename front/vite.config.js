@@ -42,6 +42,6 @@ export default defineConfig({
 // минуя прокси, и для страницы с другим origin понадобится разрешение CORS от backend.
 //
 // Это настройка сервера разработки (npm run dev). В файлы сборки dist прокси не входит.
-// На продакшене нужно отдельно настроить перенаправление /api на backend
-// либо обращаться к отдельному API с подходящей настройкой CORS на backend.
+// После npm run build из корня проекта Express отдаёт файлы front/dist и API
+// с одного адреса. Поэтому fetch('/api/posts') работает и без прокси Vite.
 // Документация: https://vite.dev/config/server-options.html#server-proxy

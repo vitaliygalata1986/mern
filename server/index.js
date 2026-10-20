@@ -2,6 +2,7 @@ import express from 'express';
 import 'dotenv/config';
 import routes from './routes/routes.js';
 import mongoose from 'mongoose';
+import { fileURLToPath } from 'node:url';
 
 const app = express();
 
@@ -11,6 +12,11 @@ app.use(express.json());
 // Подключаем маршрутизатор: путь '/' из routes.js становится адресом /api/posts.
 app.use('/api/posts', routes);
 
+// Файлы сборки React доступны с того же адреса, что и API.
+// Путь считается от этого файла, поэтому не зависит от папки запуска команды.
+const frontendPath = fileURLToPath(new URL('../front/dist/', import.meta.url));
+app.use(express.static(frontendPath));
+
 const PORT = process.env.PORT || 4000;
 
 // MONGO — строка подключения к MongoDB из окружения (например, из .env).
@@ -18,13 +24,14 @@ mongoose
   .connect(process.env.MONGO)
   .then(() => {
     // Начинаем принимать HTTP-запросы только после подключения к базе.
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server is running on port ${PORT}`);
     });
   })
-  .catch((error) =>
-    console.log('Ошибка подключения к базе данных:', error.message),
-  );
+  .catch((error) => {
+    console.error('Ошибка подключения к базе данных:', error.message);
+    process.exitCode = 1;
+  });
 
 /*
 Подробное объяснение index.js
@@ -52,6 +59,9 @@ mongoose
    Модель Posts описана в models/PostsModel.js. Контроллеры используют её
    для создания, чтения, обновления и удаления сообщений.
 
+   fileURLToPath из node:url преобразует URL папки ../front/dist/ в путь
+   файловой системы. import.meta.url указывает на этот файл index.js.
+
 5. const app = express()
    Создаём приложение. Через app настраиваем обработку запросов и запуск сервера.
 
@@ -69,6 +79,12 @@ mongoose
    а '/:id' — адресу вида /api/posts/123. HTTP-метод тоже участвует в выборе маршрута:
    GET /api/posts и POST /api/posts попадут в разные обработчики.
 
+   После API подключаем express.static(frontendPath). Он отдаёт index.html
+   по адресу / и остальные файлы из front/dist. Папку создаёт сборка React:
+   npm run build из корня проекта. Исходники и server/.env через неё недоступны.
+   В текущем React нет отдельных страниц с клиентскими маршрутами, поэтому
+   дополнительное перенаправление всех неизвестных адресов на index.html не нужно.
+
 8. const PORT = process.env.PORT || 4000
    Берём порт из окружения. Если значение отсутствует или является пустой
    строкой, используем 4000. Оператор || выбирает запасное значение справа,
@@ -82,17 +98,22 @@ mongoose
    connect() возвращает Promise — результат асинхронной операции.
    При успешном подключении выполняется .then(), внутри которого запускаем
    HTTP-сервер. Если подключиться не удалось, .catch() выводит сообщение
-   об ошибке в терминал; app.listen() в этом случае не вызывается.
+   об ошибке в терминал и задаёт ненулевой код завершения процесса;
+   app.listen() в этом случае не вызывается.
 
 10. app.listen(PORT, ...)
    Запускаем сервер на выбранном порту. Переданная функция вызывается,
    когда сервер начал слушать, и выводит сообщение в терминал.
    Обратные кавычки и ${PORT} позволяют вставить значение порта в строку.
    При локальном запуске с портом 5000 API доступно по http://localhost:5000/api/posts.
+   Хост 0.0.0.0 позволяет принимать запросы от инфраструктуры Render.
 
 Запуск проекта: npm run dev выполняет node --watch index.js. Node.js следит
 за изменениями исходных файлов и перезапускает процесс при их изменении.
 Запускаем команду из папки server, чтобы dotenv загрузил её файл .env.
+Из корня npm start вызывает npm --prefix server start: запускает node index.js
+в папке server без слежения за файлами. После сборки этот же сервер отдаёт React.
+На Render MONGO задаётся в Environment, а PORT предоставляет сама платформа.
 
 Путь запроса: клиент → express.json() → маршрутизатор /api/posts
 → соответствующая функция из controllers/PostsControllers.js

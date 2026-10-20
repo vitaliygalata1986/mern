@@ -1,0 +1,14 @@
+{
+  "name": "mern-project",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix server ci && npm --prefix front ci --include=dev",
+    "build": "npm --prefix front run build",
+    "start": "npm --prefix server start",
+    "dev:server": "npm --prefix server run dev",
+    "dev:front": "npm --prefix front run dev"
+  },
+  "engines": {
+    "node": ">=22.12.0 <23"
+  }
+}
